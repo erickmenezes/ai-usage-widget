@@ -14,12 +14,11 @@ Comments, user-visible strings, error messages, and docs are in **English**. Kee
 
 ## The data contract
 
-This project is one of **two implementations of the same contract**. The other is
-`../ai-usage-monitor/cli/usage_monitor.py`, the headless path and the reference implementation.
-
-When changing the shape of `Provider` / `Meter`, the user-visible meter labels, or the `details`
-strings, **change both** — the two surfaces must read alike. The Python side is authoritative when
-they disagree.
+This widget is the only implementation in use. It started as a port of
+`../ai-usage-monitor/cli/usage_monitor.py`, and comments still cite that file as the origin of the
+`Provider` / `Meter` shape and the `collect*` behaviour, but the Python project is no longer
+maintained. **Change the widget only** — do not mirror changes into ai-usage-monitor, and do not
+treat it as authoritative when the two disagree.
 
 ## Architecture (target)
 
