@@ -1,14 +1,22 @@
-Third release. Appearance, and a word about Codex.
+Fourth release. Claude logins that stay logged in, and Codex only when it is.
 
-**What changed since v0.1.1**
+**What changed since v0.1.2**
 
-- The menu bar panel no longer reads pale next to real menu bar dropdowns.
-  MenuBarExtra's own window already paints the menu material, and the panel
-  set a second one on top of it; two materials composite lighter than one.
-  Removing it leaves the panel with the background macOS gives it.
-- The provider cards lost their tint. It sat a shade darker than the panel
-  behind them, which reads as a seam rather than as grouping — the spacing
-  between cards already groups them.
+- Claude accounts can now be signed in from the Accounts window. A profile
+  signed in this way owns its login and refreshes it over HTTP, so it never
+  raises the macOS password prompt. Profiles added from an existing Claude Code
+  login still work, but they mirror the CLI's session and ask for the Keychain
+  password again whenever that session's token expires.
+- Mirrored profiles no longer log the Claude Code CLI out. The app used to
+  refresh their token itself, which rotated the refresh token out from under
+  the CLI; they now wait for the CLI to refresh and pick up the new token. They
+  also wait until the token has actually expired before re-reading it, which
+  halves the password prompts.
+- Codex shows up only when the Codex CLI is signed in to ChatGPT. Having the CLI
+  installed was enough before, and the row showed stale limits from its local
+  session files.
+- The Accounts window no longer disappears when you click another app, and it
+  opens in front instead of behind the frontmost window.
 
 **Installing.** Open the `.dmg` and drag AI Usage to Applications. The build is
 ad-hoc signed rather than notarized, so macOS will refuse it on first launch:
@@ -21,11 +29,10 @@ couple of minutes and signs it locally with your own Apple ID.
 
 - Claude (multiple accounts), Codex and Cursor, collected natively — no Python,
   no helper processes
-- Menu bar panel with session and weekly meters, renewal countdowns, and the
-  standby marker showing which account is actually burning quota
+- Menu bar panel with session and weekly meters and renewal countdowns
 - Widgets in all three sizes
-- Account registration from the Claude Code logins already on the machine, and
-  a Codex section saying it needs none — that comes from the Codex CLI's login
+- Claude sign-in from the Accounts window, or registration from the Claude Code
+  logins already on the machine; Codex comes from the Codex CLI's own login
 - Notifications as a limit crosses each configured threshold
 
 **Known issue.** The app icon does not appear in the widget gallery. Cosmetic;
