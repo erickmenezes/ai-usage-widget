@@ -15,6 +15,10 @@ public enum Collector {
 
     public static func collectAll() async -> [Provider] {
         let profiles = claudeProfiles()
+        // Codex is listed only once its CLI is signed in to ChatGPT. Being
+        // installed is not enough, and the stale session cache would otherwise
+        // put limits on screen for an account that is not registered.
+        let codexSignedIn = Codex.signedIn()
 
         // Concurrent, but the output order is fixed: Claude profiles in
         // directory order, then Codex, then Cursor — same as the Python
@@ -23,7 +27,9 @@ public enum Collector {
             for (index, dir) in profiles.enumerated() {
                 group.addTask { (index, await Claude.collect(profileDir: dir)) }
             }
-            group.addTask { (profiles.count, await Codex.collect()) }
+            if codexSignedIn {
+                group.addTask { (profiles.count, await Codex.collect()) }
+            }
             group.addTask { (profiles.count + 1, await Cursor.collect()) }
 
             var collected: [(Int, Provider)] = []

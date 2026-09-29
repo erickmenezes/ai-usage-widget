@@ -58,12 +58,10 @@ public enum Accounts {
     /// which account it holds. The email comes from the id_token claims the
     /// collector already reads; no secret leaves this function.
     static func codexStatus() -> CodexStatus {
-        let fm = FileManager.default
-        let auth = Config.home.appendingPathComponent(".codex/auth.json")
         let email = Codex.email()
         return CodexStatus(
-            installed: fm.isExecutableFile(atPath: Codex.findCodex().path),
-            signedIn: fm.fileExists(atPath: auth.path),
+            installed: FileManager.default.isExecutableFile(atPath: Codex.findCodex().path),
+            signedIn: Codex.signedIn(),
             email: email.isEmpty ? nil : email)
     }
 

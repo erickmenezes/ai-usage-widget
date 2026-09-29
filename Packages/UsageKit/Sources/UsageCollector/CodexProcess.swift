@@ -156,11 +156,19 @@ extension Codex {
         return best?.1
     }
 
+    /// The CLI's ChatGPT login. Its presence, not the binary's, is what makes
+    /// Codex a registered account: with Codex installed but never signed in,
+    /// the session cache can still hold someone's old limits.
+    static var authFile: URL { Config.home.appendingPathComponent(".codex/auth.json") }
+
+    static func signedIn() -> Bool {
+        FileManager.default.fileExists(atPath: authFile.path)
+    }
+
     /// Email from the `id_token` claims in ~/.codex/auth.json. Never throws —
     /// identity is a nicety, the limits are the point.
     static func email() -> String {
-        guard let auth = try? Config.readJSON(
-                Config.home.appendingPathComponent(".codex/auth.json")) as? [String: Any],
+        guard let auth = try? Config.readJSON(authFile) as? [String: Any],
               let token = auth.dict("tokens")?.string("id_token")
         else { return "" }
         let parts = token.split(separator: ".")
